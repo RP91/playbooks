@@ -1,0 +1,8 @@
+---
+- hosts: vagrant
+  become: yes
+  become_method: sudo
+  gather_facts: yes
+  tasks:
+   - name: check service
+     command: service nginx status warn=False

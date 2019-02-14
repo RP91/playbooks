@@ -1,0 +1,78 @@
+---
+- hosts: vagrant
+  become: yes
+  become_method: sudo
+  gather_facts: yes
+  tasks:
+    - name: update apt
+      apt:
+        update_cache: yes
+    - name: upgrade installed packages
+      apt:
+        upgrade: yes
+    - name: install necessary packages
+      apt:
+        name: "{{ packages }}"
+        state: latest
+      vars:
+        packages:
+        - curl
+        - wget
+        - python3
+        - python
+        - vim
+        - nginx
+        - mysql-server
+        - php
+        - git
+        - ntp
+        - zsh
+        - ufw
+      notify: 
+        - restart mysql-server
+        - restart ntp
+    - name: copy vim configuration file
+      copy:
+        src: /home/rafal/.vimrc
+        dest: /home/vagrant/
+        owner: vagrant
+        group: vagrant
+        mode: 0644
+    - name: add proper bash prompt
+      lineinfile:
+        path: /etc/skel/.bashrc
+        line: 'export PS1="\[\033[38;5;214m\]\u\[$(tput sgr0)\]\[\033[38;5;15m\]@\[$(tput sgr0)\]\[\033[38;5;45m\]\H\[$(tput sgr0)\]\[\033[38;5;15m\]:[\w]\\$: \[$(tput sgr0)\]"'
+
+    - name: enabling firewall
+      ufw:
+        state: enabled
+        policy: deny
+        rule: allow
+        port: http
+        proto: tcp
+
+    - name: creates test group
+      group:
+        name: testers
+        state: present
+
+    - name: create some local users
+      user:
+        name: test1
+        comment: this user was made by Ansible
+        shell: /bin/zsh
+        groups: testers
+    - name: get text file from remote machine
+      fetch:
+        src: /vagrant/listofcommands.txt
+        dest: /tmp
+
+  handlers:
+    - name: restart mysql-server
+      service:
+        name: mysql
+        state: restarted
+    - name: restart ntp
+      service:
+        name: ntp
+        state: restarted
