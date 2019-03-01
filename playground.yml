@@ -1,0 +1,44 @@
+---
+- hosts: playground
+  remote_user: cloud_user
+  become: yes
+  tasks:
+    - name: yum update
+      yum:
+        update_cache: yes
+    - name: install python3
+      yum:
+        name: python34
+        state: latest
+    - name: install mariadb
+      yum:
+        name: mariadb
+        state: latest
+    - name: install git
+      yum:
+        name: git
+        state: latest
+    - name: get fish shell repo
+      yum_repository:
+        name: fish
+        description: YUM fish repo
+        baseurl: https://download.opensuse.org/repositories/shells:fish:release:3/RedHat_RHEL-6/shells:fish:release:3.repo
+    - name: install fish shell
+      yum: 
+        name: fish
+        state: latest
+    - name: install zsh shell
+      yum:
+        name: zsh
+        state: latest
+    - name: Create user and apply shells
+      user: 
+        name: John
+        group: wheel
+        shell: /usr/bin/fish
+    - name: Create users and apply zsh shell
+      user:
+        name: Kate
+        shell: /usr/bin/zsh
+         
+      

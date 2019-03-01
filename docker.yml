@@ -1,0 +1,23 @@
+---
+- hosts: local
+  tasks: 
+    - name: create ubuntu container
+      docker_container:
+        name: myubuntu
+        image: ubuntu
+        volumes: 
+          - /home/rafal/backup
+        interactive: yes
+        tty: yes
+        detach: yes
+    - name: pull fedora image
+      docker_image:
+        name: fedora
+    - name: remove alpine image if present
+      docker_image:
+        name: alpine
+        state: absent
+#    - name: remove jenkins container
+#     docker_container:
+#        name: myjenkins
+#        state: absent
