@@ -18,6 +18,13 @@
         name: epel-release
         state: latest
         update_cache: yes
+    - name: add vim config file
+      copy:
+        src: /home/rafal/.vimrc
+        dest: /home/cloud_user/.vimrc
+        owner: cloud_user
+        group: cloud_user
+        mode: 0664
     - name: ensure nginx is not up
       service:
         name: nginx
