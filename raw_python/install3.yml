@@ -74,14 +74,28 @@
         - containerd.io
 #    - name: activate certbot
 #      shell: "certbot --apache >/dev/null 2>&1"
-    - name: cron certbot renewal
+    # cronjobs testing!
+    - name: cron module test
       cron:
-        name: "certbot renew"
-        minute: "0"
-        hour: "15,20"
-        job: "certbot renew >/dev/null 2>&1"
-        user: root
-
+        name: "list home directory "
+        minute: "*/5"
+        hour: "*"
+        job: "ls -l /home/cloud_user > /home/cloud_user/listing.txt 2>/dev/null"
+        user: cloud_user
+    - name: different approach to cron
+      cron:
+        name: "list all available commands && count number of commands"
+        minute: "*/20"
+        hour: "*"
+        job: "compgen -c > /home/cloud_user/commands.txt 2>/dev/null && compgen -c | wc -l > /home/cloud_user/howmanycommands.txt  2>/dev/null"
+        user: cloud_user
+    - name: root cron job
+      cron:
+        name: "This is cron test for root"
+        minute: "*/10"
+        hour: "*"
+        job: "ls -lha /root > /root/list.txt 2>/dev/null"
+        user: root 
     - name: change prompt
       lineinfile:
         path: /home/cloud_user/.bashrc
