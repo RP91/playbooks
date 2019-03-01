@@ -91,4 +91,4 @@
     - name: service apache start
       service:
         name: httpd
-        state: started
+        state: restarted
