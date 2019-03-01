@@ -27,7 +27,7 @@
       yum:
         name: httpd
         state: latest
-      notify: 
+      notify:
         - service apache start
     - name: enable apache
       service:
@@ -55,7 +55,7 @@
         name: star
         state: latest
     - name: install tree utility
-      yum: 
+      yum:
         name: tree
         state: latest
     - name: install certbot with yum-utils
@@ -68,12 +68,12 @@
         state: latest
         disable_gpg_check: yes
       vars:
-        items: 
+        items:
         - docker-ce
         - docker-ce-cli
         - containerd.io
-    - name: activate certbot
-      shell: "certbot --apache >/dev/null 2>&1"
+#    - name: activate certbot
+#      shell: "certbot --apache >/dev/null 2>&1"
     - name: cron certbot renewal
       cron:
         name: "certbot renew"
@@ -85,7 +85,7 @@
     - name: change prompt
       lineinfile:
         path: /home/cloud_user/.bashrc
-        line: 'export PS1="\[\033[38;5;202m\]\u\[$(tput sgr0)\]\[\033[38;5;15m\]@\[$(tput sgr0)\]\[\033[38;5;221m\]\h\[$(tput sgr0)\]\[\033[38;5;15m\]:\[$(tput sgr0)\]\[\033[38;5;6m\][\w]:\[$(tput sgr0)\]\[\033[38;5;15m\] \[$(tput sgr0)\]"' 
+        line: 'export PS1="\[\033[38;5;202m\]\u\[$(tput sgr0)\]\[\033[38;5;15m\]@\[$(tput sgr0)\]\[\033[38;5;221m\]\h\[$(tput sgr0)\]\[\033[38;5;15m\]:\[$(tput sgr0)\]\[\033[38;5;6m\][\w]:\[$(tput sgr0)\]\[\033[38;5;15m\] \[$(tput sgr0)\]"'
         backup: yes
   handlers:
     - name: service apache start
