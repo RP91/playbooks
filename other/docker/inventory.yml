@@ -1,0 +1,9 @@
+---
+# inventory for docker containers
+
+all:
+  hosts:
+    example-play:
+      ansible_connection: docker
+      ansible_python_interpreter: python
+  

@@ -1,0 +1,8 @@
+---
+# tasks file for docker
+
+- name: "Install packages"
+  apt:
+    name: vim 
+    state: present
+    update_cache: yes

@@ -1,0 +1,17 @@
+---
+# creating containers
+
+- name: create our container
+  hosts: localhost
+  tasks:
+    - docker_container:
+        name: ubuntu_ansible
+        image: ubuntu
+        tty: yes
+        interactive: yes
+- name: Example play
+  hosts: example-play
+  roles:
+    - name: "docker"
+
+    
