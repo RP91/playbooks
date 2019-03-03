@@ -1,14 +1,21 @@
 ---
 - hosts: playground
- #become: yes
- #become_method: sudo
+  become: yes
+  become_method: sudo
   remote_user: cloud_user
   gather_facts: yes
+  vars_files:
+    - /etc/ansible/playbooks/other/password.yml
   tasks:
-    - name: install git
+    - name: install various packages
       yum:
-        name: git
+        name: ['git','mariadb-server','mariadb','MySQL-python']
         state: latest
+    - name: start and enable mariadb server
+      service:
+        name: mariadb
+        state: started
+        enabled: yes
     - name: create repo directory
       file:
         path: /home/cloud_user/playbooks
@@ -20,3 +27,24 @@
       git:
         repo: https://github.com/RP91/playbooks.git
         dest: /home/cloud_user/playbooks
+    - name: create db
+      mysql_db:
+        name: newone
+        state: present
+        login_user: root
+        login_password: "{{ mysql_root_password }}" 
+    - name: dump all databases
+      mysql_db:
+        name: all
+        state: dump
+        target: /home/cloud_user/databases_cloud_user.sql
+        login_user: root
+        login_password: "{{ mysql_root_password }}" 
+    - name: create new mysql user
+      mysql_user:
+        name: john
+        state: present
+        priv: "*.*:ALL"
+        password: "{{ mysql_john_password }}"
+        login_user: root
+        login_password: "{{ mysql_root_password }}" 
