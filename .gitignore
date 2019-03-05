@@ -1,1 +1,3 @@
 other/ans_vault/*
+*.retry
+*/*.retry*
