@@ -9,8 +9,13 @@
   tasks:
     - name: install various packages
       yum:
-        name: ['git','mariadb-server','mariadb','MySQL-python']
+        name: "{{ item }}"
         state: latest
+      loop:
+        - git
+        - mariadb
+        - mariadb-server
+        - MySQL-python
     - name: start and enable mariadb server
       service:
         name: mariadb
@@ -23,6 +28,15 @@
         group: cloud_user
         mode: 0777
         state: directory
+    - name: add users
+      user:
+        name: "{{ item }}"
+        state: present
+        shell: /bin/bash
+      loop:
+        - user1
+        - user2
+        - user3
     - name: clone repo
       git:
         repo: https://github.com/RP91/playbooks.git

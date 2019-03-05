@@ -31,6 +31,7 @@
     - name: enable nginx
       service:
         name: nginx
+        state: started
         enabled: yes
     - name: install nfs
       yum:
@@ -67,3 +68,4 @@
       service:
         name: nginx
         state: started
+        enabled: yes

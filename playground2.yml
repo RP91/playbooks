@@ -1,0 +1,25 @@
+---
+- hosts: playground
+  remote_user: cloud_user
+  become: yes
+  become_method: sudo
+  gather_facts: yes
+  tasks:
+    - name: yum update
+      yum:
+        update_cache: yes
+    - name: install unzip utility
+      yum:
+        name: unzip
+        state: latest
+    - name: copy website
+      copy:
+        src: /home/rafal/strona/gh-pages.zip
+        dest: /home/cloud_user/
+    - name: unarchive website
+      unarchive:
+        src: /home/cloud_user/gh-pages.zip
+        dest: /usr/share/nginx/html
+        remote_src: yes
+
+        
