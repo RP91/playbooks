@@ -1,8 +1,18 @@
 ---
-- hosts: vagrant
+- hosts: "{{ hostname }}"
   become: yes
   become_method: sudo
+  remote_user: "{{ username }}" 
   gather_facts: yes
+  vars_prompt:
+    - name: hostname
+      prompt: "host: "
+      default: vagrant
+      private: no
+    - name: username
+      prompt: "username: "
+      default: vagrant
+      private: no
   tasks:
     - name: update apt
       apt:
@@ -10,6 +20,10 @@
     - name: upgrade installed packages
       apt:
         upgrade: yes
+    - name: ensure apache is not installed
+      apt:
+        name: apache2
+        state: absent
     - name: install necessary packages
       apt:
         name: "{{ packages }}"
@@ -22,6 +36,8 @@
         - python
         - vim
         - nginx
+        - nodejs
+        - npm
         - mysql-server
         - php
         - git
@@ -31,6 +47,11 @@
       notify: 
         - restart mysql-server
         - restart ntp
+    - name: enable nginx
+      service:
+        name: nginx
+        state: started
+        enabled: yes
     - name: copy vim configuration file
       copy:
         src: /home/rafal/.vimrc
@@ -40,7 +61,7 @@
         mode: 0644
     - name: add proper bash prompt
       lineinfile:
-        path: /etc/skel/.bashrc
+        path: /home/vagrant/.bashrc
         line: 'export PS1="\[\033[38;5;214m\]\u\[$(tput sgr0)\]\[\033[38;5;15m\]@\[$(tput sgr0)\]\[\033[38;5;45m\]\H\[$(tput sgr0)\]\[\033[38;5;15m\]:[\w]\\$: \[$(tput sgr0)\]"'
 
     - name: enabling firewall
@@ -50,6 +71,9 @@
         rule: allow
         port: http
         proto: tcp
+        ignore_errors: yes
+      tags:
+        - firewall
 
     - name: creates test group
       group:
@@ -66,6 +90,7 @@
       fetch:
         src: /vagrant/listofcommands.txt
         dest: /tmp
+      ignore_errors: yes
 
   handlers:
     - name: restart mysql-server

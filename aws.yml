@@ -1,0 +1,16 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: False
+  tasks:
+    - name: provision aws instances
+      ec2:
+        key_name:
+        group:
+        instance_type:
+        image:
+        wait:
+        exact_count:
+        count_tag:
+        instance_tags:
+      register: ec2

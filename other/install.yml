@@ -10,17 +10,16 @@
     - name: install various packages
       yum:
         name: "{{ item }}"
-        state: latest
+        state: absent
       loop:
-        - git
         - mariadb
         - mariadb-server
         - MySQL-python
-    - name: start and enable mariadb server
-      service:
-        name: mariadb
-        state: started
-        enabled: yes
+  #  - name: start and enable mariadb server
+   #   service:
+    #    name: mariadb
+     #   state: started
+      #  enabled: yes
     - name: create repo directory
       file:
         path: /home/cloud_user/playbooks
@@ -44,7 +43,7 @@
     - name: create db
       mysql_db:
         name: newone
-        state: present
+        state: absent
         login_user: root
         login_password: "{{ mysql_root_password }}" 
     - name: dump all databases
@@ -57,7 +56,7 @@
     - name: create new mysql user
       mysql_user:
         name: john
-        state: present
+        state: absent
         priv: "*.*:ALL"
         password: "{{ mysql_john_password }}"
         login_user: root

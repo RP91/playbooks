@@ -1,5 +1,8 @@
 ---
 - hosts: azure-instances
+  become: yes
+  become_method: sudo 
+  gather_facts: no
   tasks:
     - name: updating apt repositories
       apt:
