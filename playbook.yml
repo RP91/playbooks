@@ -2,56 +2,47 @@
 - hosts: aws-instances
   remote_user: test
   tasks:
-          - name: updating apt repositories
-            apt:
-              update_cache: yes  
-            become: yes
-          - name: upgrading packages
-            apt:
-              upgrade: yes
-            become: yes
-          - name: ensure pip is installed
-            apt:
-                    name: python-pip
-                    state: latest
-            become: yes
-          - name: install nginx
-            apt:
-                    name: nginx
-                    state: latest
-            become: yes
-          - name: start nginx
-            service:
-              name: nginx
-              state: started
-            become: yes
-          - name: enable nginx
-            service:
-              name: nginx
-              enabled: yes
-            become: yes
-          - name: install ntp
-            apt:
-              name: ntp
-              state: present
-            become: yes
-          - name: Start ntp service
-            service: 
-              name: ntp
-              state: started
-            become: yes
-          - name: Enable service ntp
-            service:
-              name: ntp
-              enabled: yes
-            become: yes
-          - name: Really useful stuff to install cowsay
-            apt:
-              name: cowsay
-              state: latest
-            become: yes
-          - name: Update public ip text file
-            shell: curl ifconfig.co > /home/test/public_ip.txt
-          - name: Get private ip and save to text file
-            shell: hostname -I | awk '{print $1}' > /home/test/private_ip.txt 
+    - name: updating apt repositories
+      apt:
+        update_cache: yes
+        become: yes
+    - name: upgrading packages
+      apt:
+        upgrade: yes
+    - name: ensure pip is installed
+      apt:
+        name: python-pip
+        state: latest
+    - name: install nginx
+      apt:
+        name: nginx
+        state: latest
+    - name: start nginx
+      service:
+        name: nginx
+        state: started
+    - name: enable nginx
+      service:
+        name: nginx
+        enabled: yes
+    - name: install ntp
+      apt:
+        name: ntp
+        state: present
+    - name: Start ntp service
+      service:
+        name: ntp
+        state: started
+    - name: Enable service ntp
+      service:
+        name: ntp
+        enabled: yes
+    - name: Really useful stuff to install cowsay
+      apt:
+        name: cowsay
+        state: latest
+    - name: Update public ip text file
+      shell: curl ifconfig.co > /home/test/public_ip.txt
+    - name: Get private ip and save to text file
+      shell: hostname -I | awk '{print $1}' > /home/test/private_ip.txt
 ...            
